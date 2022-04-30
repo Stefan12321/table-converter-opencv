@@ -1,7 +1,7 @@
 import sys, os
 import cv2
 from PyQt5.QtWidgets import QApplication, QMainWindow, QListWidget, QListWidgetItem, QPushButton, QGraphicsView, \
-    QGraphicsScene, QGraphicsEllipseItem, QGraphicsPixmapItem
+    QGraphicsScene, QGraphicsEllipseItem, QGraphicsPixmapItem, QFileDialog
 from PyQt5.QtCore import Qt, QUrl
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import QPixmap, QPen, QColor, QImage
@@ -21,6 +21,7 @@ class AppDemo(QMainWindow, Ui_MainWindow):
             lambda: self.save_file(self.graphicsView.src, self.graphicsView.data) if self.graphicsView.src is not None else None)
         self.pushButton_2.clicked.connect(lambda: self.graphicsView.scan_image())
         self.pushButton_3.clicked.connect(lambda: self.graphicsView.rotate_image())
+        self.action.triggered.connect(lambda: self.open_file())
 
     def getSelectedItem(self):
         item = QListWidgetItem(self.graphicsView.currentItem())
@@ -29,6 +30,11 @@ class AppDemo(QMainWindow, Ui_MainWindow):
     def save_file(self, filename, data):
         print('save')
         save(filename, data)
+
+    def open_file(self):
+        fname = QFileDialog.getOpenFileName(self, 'Open file')
+        print(fname)
+        self.graphicsView.draw_image(fname[0])
 
 
 if __name__ == '__main__':

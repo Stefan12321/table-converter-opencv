@@ -35,7 +35,6 @@ class Graphics(QGraphicsView):
             if src.endswith(".png") or src.endswith(".pdf"):
                 event.setDropAction(Qt.CopyAction)
                 event.accept()
-            #     print(src)
                 self.draw_image(src)
 
 
@@ -45,15 +44,11 @@ class Graphics(QGraphicsView):
     def draw_image(self, src):
         self.scene.clear()
 
-        self.src = src[7:]
-        print(self.src)
+        # self.src = src[7:]
+        print(src)
         self.cv_image = open_image(src)
 
         height, width, channel = self.cv_image.shape
-        # if width > 1200:
-        #     height = int(height/2)
-        #     width = int(width/2)
-        #     self.cv_image = cv2.resize(self.cv_image, ( height, width))
         bytesPerLine = width * channel
         self.image = QImage(self.cv_image.data, height, width,
                             bytesPerLine, QImage.Format_RGB888)

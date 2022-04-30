@@ -14,7 +14,7 @@ def open_image(src):
     if src.endswith(".pdf"):
         src = pdf_to_png(src)
     raw = cv2.imread(src, 1)
-    cv2.imshow("1", raw)
+    # cv2.imshow("1", raw)
     return raw
 
 
