@@ -1,7 +1,22 @@
 {% extends 'base_generic.html' %}
+{% load static %}
 {% block content %}
- <form method="post" enctype="multipart/form-data">
-     {% csrf_token %}
-     <input id="input-b1" name="input-b1" type="file" class="file" data-browse-on-zone-click="true">
- </form>
+     <form method="post" enctype="multipart/form-data">
+         {% csrf_token %}
+         <input id="input-b1" name="input-b1" type="file" class="file" data-browse-on-zone-click="true">
+     </form>
+    {% if src %}
+        <div>
+            <img src="{{ src }}" class="img-fluid" alt="Responsive image">
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <input value="{{ src }}" type="hidden" name="src">
+            <input type="submit" class="btn btn-primary btn-lg active" value="Scan" name="scan">
+            <input type="submit" class="btn btn-secondary btn-lg active" value="Rotate" name="rotate">
+        </form>
+
+    {% endif %}
 {% endblock content %}
