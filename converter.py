@@ -12,9 +12,11 @@ from pdf2image import convert_from_path
 
 def open_image(src):
     if src.endswith(".pdf"):
+        print('convert')
         src = pdf_to_png(src)
-    raw = cv2.imread(src, 1)
+    raw = cv2.imread(src)
     # cv2.imshow("1", raw)
+    # cv2.waitKey(2)
     return raw
 
 

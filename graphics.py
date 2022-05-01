@@ -1,6 +1,6 @@
 import cv2
 from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene, QGraphicsPixmapItem
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QRectF
 from PyQt5.QtGui import QPixmap, QImage
 from converter import parse_pic_to_excel_data, open_image
 
@@ -31,7 +31,7 @@ class Graphics(QGraphicsView):
     def dropEvent(self, event):
         if event.mimeData().hasUrls():
             src = event.mimeData().urls()[0].toString()
-            print(src)
+            # print(src)
             if src.endswith(".png") or src.endswith(".pdf"):
                 event.setDropAction(Qt.CopyAction)
                 event.accept()
@@ -44,14 +44,12 @@ class Graphics(QGraphicsView):
     def draw_image(self, src):
         self.scene.clear()
 
-        # self.src = src[7:]
+        src = src.replace('file://', '')
         print(src)
         self.cv_image = open_image(src)
-
-        height, width, channel = self.cv_image.shape
-        bytesPerLine = width * channel
-        self.image = QImage(self.cv_image.data, height, width,
-                            bytesPerLine, QImage.Format_RGB888)
+        saved_image = './data/saved_image.png'
+        cv2.imwrite(saved_image, self.cv_image)
+        self.image = QImage(saved_image)
         item = QGraphicsPixmapItem(QPixmap.fromImage(self.image))
         self.scene.addItem(item)
 
@@ -59,22 +57,20 @@ class Graphics(QGraphicsView):
         self.scene.clear()
         self.data, cv_image = parse_pic_to_excel_data(self.cv_image)
 
-        height, width, channel = self.cv_image.shape
-        bytesPerLine = width * channel
-        self.image = QImage(self.cv_image.data, height, width,
-                            bytesPerLine, QImage.Format_RGB888)
+        saved_image = './data/saved_image.png'
+        cv2.imwrite(saved_image, self.cv_image)
+        self.image = QImage(saved_image)
         item = QGraphicsPixmapItem(QPixmap.fromImage(self.image))
         self.scene.addItem(item)
 
     def rotate_image(self) -> None:
         self.scene.clear()
         self.cv_image = cv2.rotate(self.cv_image, cv2.ROTATE_90_CLOCKWISE)
-        # cv2.imshow("a", self.cv_image)
         print(self.cv_image.shape)
-        height, width, channel = self.cv_image.shape
-        bytesPerLine = width * channel
-        self.image = QImage(self.cv_image.data, height, width,
-                            bytesPerLine, QImage.Format_RGB888)
+        self.scene.setSceneRect(QRectF(0, 0, self.cv_image.shape[1], self.cv_image.shape[0]))
+        print(self.scene.sceneRect())
+        saved_image = './data/saved_image.png'
+        cv2.imwrite(saved_image, self.cv_image)
+        self.image = QImage(saved_image)
         item = QGraphicsPixmapItem(QPixmap.fromImage(self.image))
         self.scene.addItem(item)
-        # print(self.scene.items())
