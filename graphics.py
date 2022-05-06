@@ -2,7 +2,7 @@ import cv2
 from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene, QGraphicsPixmapItem
 from PyQt5.QtCore import Qt, QRectF
 from PyQt5.QtGui import QPixmap, QImage
-from converter import parse_pic_to_excel_data, open_image
+from web_table_parser.view.converter import parse_pic_to_excel_data, open_image
 
 
 class Graphics(QGraphicsView):

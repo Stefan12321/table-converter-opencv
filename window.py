@@ -1,12 +1,7 @@
-import sys, os
-import cv2
-from PyQt5.QtWidgets import QApplication, QMainWindow, QListWidget, QListWidgetItem, QPushButton, QGraphicsView, \
-    QGraphicsScene, QGraphicsEllipseItem, QGraphicsPixmapItem, QFileDialog
-from PyQt5.QtCore import Qt, QUrl
-from PyQt5 import QtWidgets
-from PyQt5.QtGui import QPixmap, QPen, QColor, QImage
+import sys
+from PyQt5.QtWidgets import QApplication, QMainWindow, QListWidgetItem, QFileDialog
 
-from converter import parse_pic_to_excel_data, open_image, save
+from web_table_parser.view.converter import save
 from user_interface import Ui_MainWindow
 
 

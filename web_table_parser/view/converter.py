@@ -3,11 +3,13 @@ import os
 import cv2
 import numpy as np
 import pytesseract
-from PIL import Image
 import csv
 import re
-import json
+import platform
+
 from pdf2image import convert_from_path
+if platform.system() == 'Windows':
+    pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
 
 
 def open_image(src):
@@ -59,15 +61,9 @@ def parse_pic_to_excel_data(raw):
 
      # Определить схему таблицы
     merge = cv2.add(dilated_col, dilated_row)
-    # cv2.imshow("entire_excel_contour：", merge)
-    # cv2.imshow("excel_bitwise_and", cv2.add(merge, binary))
-    # cv2.imshow("excel_bitwise_and", raw)
-    #
-    # cv2.waitKey(0)
 
      # Вычитаются два изображения и удаляются границы таблицы
     merge2 = cv2.subtract(binary, merge)
-    # cv2.imshow("binary_sub_excel_rect", merge2)
 
     new_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 2))
     erode_image = cv2.morphologyEx(merge2, cv2.MORPH_OPEN, new_kernel)
@@ -159,6 +155,6 @@ def test():
 
 if __name__ == '__main__':
     path = './excel/test.csv'
-    src = './data/target.png'
+    src = '../../data/target.png'
     data = parse_pic_to_excel_data(src)
     # test_save(path, data)
