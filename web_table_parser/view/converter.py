@@ -6,8 +6,11 @@ import pytesseract
 import csv
 import re
 import platform
+import pandas as pd
 
 from pdf2image import convert_from_path
+from openpyxl import load_workbook
+
 if platform.system() == 'Windows':
     pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
 
@@ -28,7 +31,7 @@ def pdf_to_png(path: str) -> str:
     return "./data/target.png"
 
 
-def parse_pic_to_excel_data(raw):
+def parse_pic_to_excel_data(raw, path: str):
 
     # print("SRC:", src)
     #
@@ -99,7 +102,9 @@ def parse_pic_to_excel_data(raw):
 
     # Цикл координаты y, таблица разделения координат x
     data = [[] for i in range(len(y_point_arr))]
+    data_fr_pd = []
     for i in range(len(y_point_arr) - 1):
+        data_fr_pd.append([])
         for j in range(len(x_point_arr) - 1):
             # При делении первый параметр - это координата y, а второй параметр - координата x
             cell = raw[y_point_arr[i]:y_point_arr[i + 1], x_point_arr[j]:x_point_arr[j + 1]]
@@ -112,15 +117,24 @@ def parse_pic_to_excel_data(raw):
             text1 = pytesseract.image_to_string(cell, lang="ukr")
 
                      # Удалить специальные символы
-            text1 = re.findall(r'[^\*"/:?\\|<>″′‖ 〈\n]', text1, re.S)
+            # text1 = re.findall(r'[^\*"/:?\\|<>″′‖ 〈\n]', text1, re.S)
             text1 = "".join(text1)
-            print ('Информация об изображении ячейки:' + text1)
+            data_fr_pd[i].append(text1)
+            # print(f'Информация об изображении ячейки x: {j} y: {i} :' + text1)
             data[i].append(text1)
             j = j + 1
         i = i + 1
     # cv2.imshow("test",raw)
     # cv2.waitKey(0)
-    return data, raw
+    df = pd.DataFrame(data_fr_pd)
+    df.to_excel(f"{path.split('.')[0]}.xlsx")
+    print(df)
+    return data, raw, x_point_arr, y_point_arr
+
+
+def write_to_excel(data):
+    wb = load_workbook('./test.xlsx')
+    sheet = wb.get_sheet_by_name(wb.get_sheet_names()[0])
 
 
 def write_csv(path, data):
@@ -154,7 +168,6 @@ def test():
 
 
 if __name__ == '__main__':
-    path = './excel/test.csv'
-    src = '../../data/target.png'
-    data = parse_pic_to_excel_data(src)
-    # test_save(path, data)
+    cv_image = cv2.imread('./img.png')
+    data = parse_pic_to_excel_data(cv_image)
+    # write_to_excel(1)

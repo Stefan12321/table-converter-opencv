@@ -1,43 +1,60 @@
 {% extends 'base_generic.html' %}
 {% load static %}
+{% load filters %}
 {% block content %}
-     <form method="post" enctype="multipart/form-data">
-         {% csrf_token %}
-         {% if src %}
-            <input id="input-b2" name="input-b2" type="file" class="file" data-show-preview="false">
-         {% else %}
-            <input id="input-b1" name="input-b1" type="file" class="file" data-browse-on-zone-click="true">
-         {% endif %}
-     </form>
-    <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-        {{ lang }}
-        </button>
-
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            {% for i in langauge %}
-                <li><a class="dropdown-item" href="/{{ i }}">{{ i }}</a></li>
-            {% endfor %}
-        </ul>
-    </div>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
     {% if src %}
-        <div class="card">
-          <div class="card-body">
-              <form method="post">
-                  {% csrf_token %}
-                  <input type="submit" class="btn btn-primary btn-sm active" value="X" name="close">
-              </form>
-              <img src="{{ src }}" class="img-fluid" alt="Responsive image">
-          </div>
-        </div>
+        <input id="input-b2" name="input-b2" type="file" class="file" data-show-preview="false">
+    {% else %}
+        <input id="input-b1" name="input-b1" type="file" class="file" data-browse-on-zone-click="true">
+    {% endif %}
+</form>
 
+{% if src %}
+<div class="row gy-3">
+    <div class="card">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <input type="submit" class="btn btn-primary btn-sm active" value="X" name="close">
+            </form>
+            <img src="{{ src }}" class="img-fluid" alt="Responsive image">
+        </div>
+    </div>
+
+    <div class="col-8">
         <form method="post">
             {% csrf_token %}
 
             <input value="{{ src }}" type="hidden" name="src">
             <input type="submit" class="btn btn-primary btn-lg active" value="Scan" name="scan">
             <input type="submit" class="btn btn-secondary btn-lg active" value="Rotate" name="rotate">
+            {% if download %}
+                <a class="btn btn-secondary btn-lg active" href="download{{ download_src }}">Download</a>
+            {% endif %}
+
         </form>
 
-    {% endif %}
+    </div>
+    <div class="col-2"></div>
+    <div class="col-2">
+        <div class="dropdown">
+            <button class="btn btn-secondary btn-lg dropdown-toggle" type="button" id="dropdownMenuButton1"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                {{ lang }}
+            </button>
+
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                {% for i in langauge %}
+                    <li><a class="dropdown-item" href="/{{ i }}">{{ i }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+
+{% endif %}
 {% endblock content %}
